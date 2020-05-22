@@ -15,9 +15,6 @@ services:
       - ${DOCUMENT_ROOT-./www}:/var/www/html
       - ${VHOSTS_DIR-./config/nginx/sites-enabled}:/etc/nginx/sites-enabled
       - ${LOG_DIR-./logs/nginx}:/var/log/nginx
-
-    #      - ${PHP_INI-./config/php/php.ini}:/etc/php/7.3/fpm/conf.d/php.ini
-#      - ${NGINX_CONF-./config/nginx}:/usr/local/nginx/conf/nginx.conf
     environment:
       XDEBUG_CONFIG: remote_host=host.docker.internal
   mysql:
@@ -36,7 +33,8 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    build:
+      context: ./bin/redis
     container_name: lemp-php7.3-phpmyadmin
     links:
       - mysql
@@ -54,7 +52,8 @@ services:
       - /sessions
   redis:
     container_name: lemp-php7.3-redis
-    image: redis:latest
+    build:
+      context: ./bin/redis
     ports:
       - "${HOST_MACHINE_REDIS_PORT}:6379"
   blackfire:

@@ -1,0 +1,68 @@
+version: "3"
+services:
+  webserver:
+    build: 
+      context: ./bin/webserver
+    container_name: lemp-php7.3-webserver
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT}:443"
+    links: 
+      - mysql
+      - redis
+    volumes:
+      - ${DOCUMENT_ROOT-./www}:/var/www/html
+      - ${VHOSTS_DIR-./config/nginx/sites-enabled}:/etc/nginx/sites-enabled
+      - ${LOG_DIR-./logs/nginx}:/var/log/nginx
+
+    #      - ${PHP_INI-./config/php/php.ini}:/etc/php/7.3/fpm/conf.d/php.ini
+#      - ${NGINX_CONF-./config/nginx}:/usr/local/nginx/conf/nginx.conf
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal
+  mysql:
+    build:
+      context: "./bin/${DATABASE}"
+    container_name: lemp-php7.3-mysql
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_MYSQL_PORT}:3306"
+    volumes:
+      - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lemp-php7.3-phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '8080:80'
+    volumes:
+      - /sessions
+  redis:
+    container_name: lemp-php7.3-redis
+    image: redis:latest
+    ports:
+      - "${HOST_MACHINE_REDIS_PORT}:6379"
+  blackfire:
+    build:
+      context: ./bin/blackfire
+    ports: ["8707"]
+    environment:
+      BLACKFIRE_SERVER_ID: "${BLACKFIRE_SERVER_ID}"
+      BLACKFIRE_SERVER_TOKEN: "${BLACKFIRE_SERVER_TOKEN}"
+      BLACKFIRE_CLIENT_ID: " ${BLACKFIRE_CLIENT_ID}"
+      BLACKFIRE_CLIENT_TOKEN:  "${BLACKFIRE_CLIENT_TOKEN}"

@@ -12,11 +12,12 @@ services:
       - mysql
       - redis
     volumes:
-      - ${DOCUMENT_ROOT-./www}:/var/www/html
+      - ${DOCUMENT_ROOT-./www}:/usr/share/nginx/html
       - ${VHOSTS_DIR-./config/nginx/sites-enabled}:/etc/nginx/sites-enabled
+      - ${PHP_INI-./config/php/php.ini}:/etc/php/7.3/fpm/conf.d/php.ini
       - ${LOG_DIR-./logs/nginx}:/var/log/nginx
     environment:
-      XDEBUG_CONFIG: remote_host=host.docker.internal
+      XDEBUG_CONFIG: xdebug.remote_host=host.docker.internal
   mysql:
     build:
       context: "./bin/${DATABASE}"
@@ -57,6 +58,7 @@ services:
     ports:
       - "${HOST_MACHINE_REDIS_PORT}:6379"
   blackfire:
+    container_name: lemp-php7.3-blackfire
     build:
       context: ./bin/blackfire
     ports: ["8707"]

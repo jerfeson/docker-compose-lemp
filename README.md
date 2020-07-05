@@ -11,7 +11,7 @@ This is a basic LEMP stack environment built using Docker Compose. It consists f
 
 ## Use appropriate branch as per your php version needed:
 
-* [7.3.x](https://github.com/jerfeson/docker-compose-lemp/tree/5.6.x)
+* [7.3.x](https://github.com/jerfeson/docker-compose-lemp/tree/7.3.x)
 
 ## Configuration and Usage
 

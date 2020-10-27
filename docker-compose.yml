@@ -3,12 +3,14 @@ services:
   webserver:
     build: 
       context: ./bin/webserver
-    container_name: lemp-php7.3-webserver
+    container_name: ${PROJECT_NAME}_webserver
     restart: 'always'
+    expose:
+      - "9000" #expose port for xdebug
     ports:
-      - "${HOST_MACHINE_UNSECURE_HOST_PORT}:80"
-      - "${HOST_MACHINE_SECURE_HOST_PORT}:443"
-    links: 
+      - ${HOST_PORT}:80
+      - ${SECURE_HOST_PORT}:443
+    links:
       - mysql
       - redis
     volumes:
@@ -16,15 +18,13 @@ services:
       - ${VHOSTS_DIR-./config/nginx/sites-enabled}:/etc/nginx/sites-enabled
       - ${PHP_INI-./config/php/php.ini}:/etc/php/7.3/fpm/conf.d/php.ini
       - ${LOG_DIR-./logs/nginx}:/var/log/nginx
-    environment:
-      XDEBUG_CONFIG: xdebug.remote_host=host.docker.internal
   mysql:
     build:
       context: "./bin/${DATABASE}"
-    container_name: lemp-php7.3-mysql
+    container_name: ${PROJECT_NAME}_mysql
     restart: 'always'
     ports:
-      - "${HOST_MACHINE_MYSQL_PORT}:3306"
+      - ${MYSQL_PORT}:3306
     volumes:
       - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
       - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
@@ -36,7 +36,7 @@ services:
   phpmyadmin:
     build:
       context: ./bin/phpmyadmin
-    container_name: lemp-php7.3-phpmyadmin
+    container_name: ${PROJECT_NAME}_phpmyadmin
     links:
       - mysql
     environment:
@@ -52,13 +52,13 @@ services:
     volumes:
       - /sessions
   redis:
-    container_name: lemp-php7.3-redis
+    container_name: ${PROJECT_NAME}_redis
     build:
       context: ./bin/redis
     ports:
-      - "${HOST_MACHINE_REDIS_PORT}:6379"
+      - ${REDIS_PORT}:6379
   blackfire:
-    container_name: lemp-php7.3-blackfire
+    container_name: ${PROJECT_NAME}_blackfire
     build:
       context: ./bin/blackfire
     ports: ["8707"]

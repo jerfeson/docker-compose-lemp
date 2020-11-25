@@ -3,7 +3,7 @@
 
 This is a basic LEMP stack environment built using Docker Compose. It consists following:
 
-- PHP 7.3.X (More later)
+- PHP 7.3.x, 7.4.x (More later)
 - Nginx
 - MySQL
 - phpMyAdmin
@@ -12,6 +12,7 @@ This is a basic LEMP stack environment built using Docker Compose. It consists f
 ## Use appropriate branch as per your php version needed:
 
 * [7.3.x](https://github.com/jerfeson/docker-compose-lemp/tree/7.3.x)
+* [7.4.x](https://github.com/jerfeson/docker-compose-lemp/tree/7.4.x)
 
 ## Configuration and Usage
 

@@ -16,7 +16,7 @@ services:
     volumes:
       - ${DOCUMENT_ROOT-./www}:/usr/share/nginx/html
       - ${VHOSTS_DIR-./config/nginx/sites-enabled}:/etc/nginx/sites-enabled
-      - ${PHP_INI-./config/php/php.ini}:/etc/php/7.4/fpm/conf.d/php.ini
+      - ${PHP_INI-./config/php/php.ini}:/etc/php/8.0/fpm/conf.d/php.ini
       - ${LOG_DIR-./logs/nginx}:/var/log/nginx
   mysql:
     build:

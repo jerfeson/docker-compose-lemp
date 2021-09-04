@@ -1,1 +1,1 @@
-FROM jerfeson/npf:php74
+FROM npf:php80

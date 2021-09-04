@@ -3,7 +3,8 @@ services:
   webserver:
     build: 
       context: ./bin/webserver
-    container_name: ${PROJECT_NAME}_webserver
+    container_name: ${COMPOSER_PROJECT_NAME}_webserver
+    image: ${COMPOSER_PROJECT_NAME}_webserver
     restart: 'always'
     expose:
       - "9000" #expose port for xdebug
